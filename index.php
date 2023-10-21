@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHP CRUD Application Using jQuery Ajax</title>
+  <title>SKA MOTORS Management System</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -14,7 +14,7 @@
 <body>
   <div class="container">
     <div class="alert alert alert-primary" role="alert">
-      <h4 class="text-primary text-center">PHP CRUD Application Using jQuery Ajax</h4>
+      <h4 class="text-primary text-center">SKA MOTORS Management System</h4>
     </div>
     <div class="alert alert-success text-center message" role="alert">
 
@@ -40,7 +40,7 @@ include_once 'profile.php';
       </div>
     </div>
 <?php
-include_once 'playerstable.php';
+include_once 'rentalstable.php';
 ?>
     <nav id="pagination">
     </nav>
@@ -61,3 +61,7 @@ include_once 'playerstable.php';
   </div>
 </body>
 </html>
+
+
+
+

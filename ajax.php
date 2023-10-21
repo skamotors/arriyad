@@ -2,8 +2,8 @@
 $action = $_REQUEST['action'];
 
 if (!empty($action)) {
-    require_once 'includes/Player.php';
-    $obj = new Player();
+    require_once 'includes/rental.php';
+    $obj = new rental();
 }
 
 if ($action == 'adduser' && !empty($_POST)) {
@@ -11,35 +11,35 @@ if ($action == 'adduser' && !empty($_POST)) {
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $photo = $_FILES['photo'];
-    $playerId = (!empty($_POST['userid'])) ? $_POST['userid'] : '';
+    $rentalId = (!empty($_POST['userid'])) ? $_POST['userid'] : '';
 
     // file (photo) upload
     $imagename = '';
     if (!empty($photo['name'])) {
         $imagename = $obj->uploadPhoto($photo);
-        $playerData = [
+        $rentalData = [
             'pname' => $pname,
             'email' => $email,
             'phone' => $phone,
             'photo' => $imagename,
         ];
     } else {
-        $playerData = [
+        $rentalData = [
             'pname' => $pname,
             'email' => $email,
             'phone' => $phone,
         ];
     }
 
-    if ($playerId) {
-        $obj->update($playerData, $playerId);
+    if ($rentalId) {
+        $obj->update($rentalData, $rentalId);
     } else {
-        $playerId = $obj->add($playerData);
+        $rentalId = $obj->add($rentalData);
     }
 
-    if (!empty($playerId)) {
-        $player = $obj->getRow('id', $playerId);
-        echo json_encode($player);
+    if (!empty($rentalId)) {
+        $rental = $obj->getRow('id', $rentalId);
+        echo json_encode($rental);
         exit();
     }
 }
@@ -49,31 +49,31 @@ if ($action == "getusers") {
     $limit = 4;
     $start = ($page - 1) * $limit;
 
-    $players = $obj->getRows($start, $limit);
-    if (!empty($players)) {
-        $playerslist = $players;
+    $rentals = $obj->getRows($start, $limit);
+    if (!empty($rentals)) {
+        $rentalslist = $rentals;
     } else {
-        $playerslist = [];
+        $rentalslist = [];
     }
     $total = $obj->getCount();
-    $playerArr = ['count' => $total, 'players' => $playerslist];
-    echo json_encode($playerArr);
+    $rentalArr = ['count' => $total, 'rentals' => $rentalslist];
+    echo json_encode($rentalArr);
     exit();
 }
 
 if ($action == "getuser") {
-    $playerId = (!empty($_GET['id'])) ? $_GET['id'] : '';
-    if (!empty($playerId)) {
-        $player = $obj->getRow('id', $playerId);
-        echo json_encode($player);
+    $rentalId = (!empty($_GET['id'])) ? $_GET['id'] : '';
+    if (!empty($rentalId)) {
+        $rental = $obj->getRow('id', $rentalId);
+        echo json_encode($rental);
         exit();
     }
 }
 
 if ($action == "deleteuser") {
-    $playerId = (!empty($_GET['id'])) ? $_GET['id'] : '';
-    if (!empty($playerId)) {
-        $isDeleted = $obj->deleteRow($playerId);
+    $rentalId = (!empty($_GET['id'])) ? $_GET['id'] : '';
+    if (!empty($rentalId)) {
+        $isDeleted = $obj->deleteRow($rentalId);
         if ($isDeleted) {
             $message = ['deleted' => 1];
         } else {
@@ -86,7 +86,7 @@ if ($action == "deleteuser") {
 
 if ($action == 'search') {
     $queryString = (!empty($_GET['searchQuery'])) ? trim($_GET['searchQuery']) : '';
-    $results = $obj->searchPlayer($queryString);
+    $results = $obj->searchrental($queryString);
     echo json_encode($results);
     exit();
 }

@@ -1,10 +1,10 @@
 <?php
 require_once 'Database.php';
 
-class Player extends Database
+class rental extends Database
 {
     // table name
-    protected $tableName = 'players';
+    protected $tableName = 'rentals';
 
     /**
      * function is used to add record
@@ -132,7 +132,7 @@ class Player extends Database
         return $result;
     }
 
-    public function searchPlayer($searchText, $start = 0, $limit = 4)
+    public function searchrental($searchText, $start = 0, $limit = 4)
     {
         $sql = "SELECT * FROM {$this->tableName} WHERE pname LIKE :search ORDER BY id DESC LIMIT {$start},{$limit}";
         $stmt = $this->conn->prepare($sql);

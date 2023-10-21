@@ -22,30 +22,30 @@ function pagination(totalpages, currentpage) {
   $("#pagination").html(pagelist);
 }
 
-// get player row
-function getplayerrow(player) {
-  var playerRow = "";
-  if (player) {
-    const userphoto = player.photo ? player.photo : "default.png";
-    playerRow = `<tr>
+// get rental row
+function getrentalrow(rental) {
+  var rentalRow = "";
+  if (rental) {
+    const userphoto = rental.photo ? rental.photo : "default.png";
+    rentalRow = `<tr>
           <td class="align-middle"><img src="uploads/${userphoto}" class="img-thumbnail rounded float-left"></td>
-          <td class="align-middle">${player.pname}</td>
-          <td class="align-middle">${player.email}</td>
-          <td class="align-middle">${player.phone}</td>
+          <td class="align-middle">${rental.pname}</td>
+          <td class="align-middle">${rental.email}</td>
+          <td class="align-middle">${rental.phone}</td>
           <td class="align-middle">
             <a href="#" class="btn btn-success mr-3 profile" data-toggle="modal" data-target="#userViewModal"
-              title="Prfile" data-id="${player.id}"><i class="fa fa-address-card-o" aria-hidden="true"></i></a>
+              title="Prfile" data-id="${rental.id}"><i class="fa fa-address-card-o" aria-hidden="true"></i></a>
             <a href="#" class="btn btn-warning mr-3 edituser" data-toggle="modal" data-target="#userModal"
-              title="Edit" data-id="${player.id}"><i class="fa fa-pencil-square-o fa-lg"></i></a>
-            <a href="#" class="btn btn-danger deleteuser" data-userid="14" title="Delete" data-id="${player.id}"><i
+              title="Edit" data-id="${rental.id}"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+            <a href="#" class="btn btn-danger deleteuser" data-userid="14" title="Delete" data-id="${rental.id}"><i
                 class="fa fa-trash-o fa-lg"></i></a>
           </td>
         </tr>`;
   }
-  return playerRow;
+  return rentalRow;
 }
-// get players list
-function getplayers() {
+// get rentals list
+function getrentals() {
   var pageno = $("#currentpage").val();
   $.ajax({
     url: "/arriyad/ajax.php",
@@ -57,14 +57,14 @@ function getplayers() {
     },
     success: function (rows) {
       console.log(rows);
-      if (rows.players) {
-        var playerslist = "";
-        $.each(rows.players, function (index, player) {
-          playerslist += getplayerrow(player);
+      if (rows.rentals) {
+        var rentalslist = "";
+        $.each(rows.rentals, function (index, rental) {
+          rentalslist += getrentalrow(rental);
         });
-        $("#userstable tbody").html(playerslist);
-        let totalPlayers = rows.count;
-        let totalpages = Math.ceil(parseInt(totalPlayers) / 4);
+        $("#userstable tbody").html(rentalslist);
+        let totalrentals = rows.count;
+        let totalpages = Math.ceil(parseInt(totalrentals) / 4);
         const currentpage = $("#currentpage").val();
         pagination(totalpages, currentpage);
         $("#overlay").fadeOut();
@@ -82,8 +82,8 @@ $(document).ready(function () {
     event.preventDefault();
     var alertmsg =
       $("#userid").val().length > 0
-        ? "Player has been updated Successfully!"
-        : "New Player has been added Successfully!";
+        ? "Rental has been updated Successfully!"
+        : "New Rental has been added Successfully!";
     $.ajax({
       url: "/arriyad/ajax.php",
       type: "POST",
@@ -100,7 +100,7 @@ $(document).ready(function () {
           $("#userModal").modal("hide");
           $("#addform")[0].reset();
           $(".message").html(alertmsg).fadeIn().delay(3000).fadeOut();
-          getplayers();
+          getrentals();
           $("#overlay").fadeOut();
         }
       },
@@ -115,7 +115,7 @@ $(document).ready(function () {
     var $this = $(this);
     const pagenum = $this.data("page");
     $("#currentpage").val(pagenum);
-    getplayers();
+    getrentals();
     $this.parent().siblings().removeClass("active");
     $this.parent().addClass("active");
   });
@@ -137,12 +137,12 @@ $(document).ready(function () {
       beforeSend: function () {
         $("#overlay").fadeIn();
       },
-      success: function (player) {
-        if (player) {
-          $("#username").val(player.pname);
-          $("#email").val(player.email);
-          $("#phone").val(player.phone);
-          $("#userid").val(player.id);
+      success: function (rental) {
+        if (rental) {
+          $("#username").val(rental.pname);
+          $("#email").val(rental.email);
+          $("#phone").val(rental.phone);
+          $("#userid").val(rental.id);
         }
         $("#overlay").fadeOut();
       },
@@ -168,11 +168,11 @@ $(document).ready(function () {
         success: function (res) {
           if (res.deleted == 1) {
             $(".message")
-              .html("Player has been deleted successfully!")
+              .html("rental has been deleted successfully!")
               .fadeIn()
               .delay(3000)
               .fadeOut();
-            getplayers();
+            getrentals();
             $("#overlay").fadeOut();
           }
         },
@@ -191,19 +191,19 @@ $(document).ready(function () {
       type: "GET",
       dataType: "json",
       data: { id: pid, action: "getuser" },
-      success: function (player) {
-        if (player) {
-          const userphoto = player.photo ? player.photo : "default.png";
+      success: function (rental) {
+        if (rental) {
+          const userphoto = rental.photo ? rental.photo : "default.png";
           const profile = `<div class="row">
                 <div class="col-sm-6 col-md-4">
                   <img src="uploads/${userphoto}" class="rounded responsive" />
                 </div>
                 <div class="col-sm-6 col-md-8">
-                  <h4 class="text-primary">${player.pname}</h4>
+                  <h4 class="text-primary">${rental.pname}</h4>
                   <p class="text-secondary">
-                    <i class="fa fa-envelope-o" aria-hidden="true"></i> ${player.email}
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i> ${rental.email}
                     <br />
-                    <i class="fa fa-phone" aria-hidden="true"></i> ${player.phone}
+                    <i class="fa fa-phone" aria-hidden="true"></i> ${rental.phone}
                   </p>
                 </div>
               </div>`;
@@ -225,13 +225,13 @@ $(document).ready(function () {
         type: "GET",
         dataType: "json",
         data: { searchQuery: searchText, action: "search" },
-        success: function (players) {
-          if (players) {
-            var playerslist = "";
-            $.each(players, function (index, player) {
-              playerslist += getplayerrow(player);
+        success: function (rentals) {
+          if (rentals) {
+            var rentalslist = "";
+            $.each(rentals, function (index, rental) {
+              rentalslist += getrentalrow(rental);
             });
-            $("#userstable tbody").html(playerslist);
+            $("#userstable tbody").html(rentalslist);
             $("#pagination").hide();
           }
         },
@@ -240,10 +240,10 @@ $(document).ready(function () {
         },
       });
     } else {
-      getplayers();
+      getrentals();
       $("#pagination").show();
     }
   });
-  // load players
-  getplayers();
+  // load rentals
+  getrentals();
 });
